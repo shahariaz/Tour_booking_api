@@ -1,19 +1,17 @@
-const fs = require('fs');
 const express = require('express');
+const userController = require('./../controllers/userController');
+
 const router = express.Router();
 
-const users = JSON.parse(
-  fs.readFileSync(`${__dirname}/../dev-data/data/users.json`, 'utf-8')
-);
+router
+  .route('/')
+  .get(userController.getAllUsers)
+  .post(userController.createUser);
 
-const getAllUsers = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    totalUser: users.length,
-    data: {
-      users,
-    },
-  });
-};
-router.route('/').get(getAllUsers);
+router
+  .route('/:id')
+  .get(userController.getUser)
+  .patch(userController.updateUser)
+  .delete(userController.deleteUser);
+
 module.exports = router;

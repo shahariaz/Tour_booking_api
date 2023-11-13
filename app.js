@@ -1,8 +1,7 @@
-const fs = require('fs');
 const express = require('express');
 const morgan = require('morgan');
-const usersRouter = require(`${__dirname}/routes/userRoutes.js`);
-const tourRouter = require(`${__dirname}/routes/userRoutes.js`);
+const usersRouter = require('./routes/userRoutes');
+const tourRouter = require('./routes/tourRoutes');
 const app = express();
 app.use(morgan('dev'));
 app.use(express.json());
