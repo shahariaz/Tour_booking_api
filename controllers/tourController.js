@@ -1,5 +1,10 @@
 const Tours = require('../models/tour.model');
-
+exports.aliasTopTours = async (req, res, next) => {
+  req.query.limit = '5';
+  req.query.sort = '-ratingsAverage,price';
+  req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
+  next();
+};
 exports.getAllTours = async (req, res) => {
   try {
     //1A,,,,BUILD QUERY
@@ -23,16 +28,17 @@ exports.getAllTours = async (req, res) => {
       query = query.sort('-createdAt');
     }
     //3))fileds limiting
-    if (req.query.fileds) {
-      const fileds = req.query.fileds.split(',').join(' ');
-      query = query.select('fileds');
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join('  ');
+      console.log(fields);
+      query = query.select(fields);
     } else {
       query = query.select('-__v');
     }
 
     //4)Pagination
     const page = req.query.page * 1 || 1;
-    const limit = req.query.limit * 1 || 1;
+    const limit = req.query.limit * 1 || 100;
     const skip = (page - 1) * limit;
     query = query.skip(skip).limit(limit);
     if (req.query.page) {
@@ -45,13 +51,12 @@ exports.getAllTours = async (req, res) => {
     const tours = await query;
     res.status(200).json({
       status: 'success',
-      totalTours: Tours.length,
-      message: {
-        tours,
+      totalTours: tours.length,
+      data: {
+        tours: tours,
       },
     });
   } catch (error) {
-    limitlimit;
     res.status(404).json({
       status: '404 Not Found',
       message: 'Could not find any tour',
