@@ -7,4 +7,6 @@ class AppError extends Error {
     Error.captureStackTrace(this, this.constructor);
   }
 }
+const okok = new AppError('okok', 400);
+
 module.exports = AppError;
