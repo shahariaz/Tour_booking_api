@@ -11,7 +11,19 @@ exports.signup = catchAsync(async (req, res, next) => {
   const exitingUser = await User.findOne({ email: userEmail });
 
   if (exitingUser) {
-    return next(new AppError('User already exists', 409));
+    let duplicateField;
+    if (exitingUser.email === userEmail) {
+      duplicateField = 'email';
+    } else {
+      duplicateField = 'username';
+    }
+
+    return next(
+      new AppError(
+        `Already User Exist On this ${duplicateField}: ${req.body[duplicateField]}`,
+        409
+      )
+    );
   }
 
   const createdUser = await User.create(req.body);
