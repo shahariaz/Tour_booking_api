@@ -1,9 +1,10 @@
 const express = require('express');
 const userController = require('./../controllers/userController');
-const { signup } = require('./../controllers/authController');
+const { signup, login } = require('./../controllers/authController');
 
 const router = express.Router();
 router.post('/singup', signup);
+router.post('/login', login);
 router
   .route('/')
   .get(userController.getAllUsers)

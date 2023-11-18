@@ -22,6 +22,7 @@ const userSchema = new Schema({
     type: String,
     required: [true, 'A user must provide a password'],
     minlength: 8,
+    select: false,
   },
   passwordConfirm: {
     type: String,
@@ -54,6 +55,12 @@ userSchema.pre('save', async function (next) {
     return next(error);
   }
 });
-
+// Define a method to check if the provided password matches the stored hashed password
+userSchema.methods.correctPassword = async function (
+  candidatePassword,
+  userPassword
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 const Users = model('Users', userSchema);
 module.exports = Users;
